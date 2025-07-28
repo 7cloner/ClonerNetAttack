@@ -4,6 +4,12 @@ plugins {
     id("maven-publish")
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+    }
+}
+
 android {
     namespace = "com.cloner.http.attack"
     compileSdk = 36
@@ -28,9 +34,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+}
+
+
+
+dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.okhttp)
+    implementation(libs.kotlinx.coroutines.android)
 }
 
 publishing {
@@ -41,10 +52,4 @@ publishing {
             }
         }
     }
-}
-
-dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.okhttp)
-    implementation(libs.kotlinx.coroutines.android)
 }
