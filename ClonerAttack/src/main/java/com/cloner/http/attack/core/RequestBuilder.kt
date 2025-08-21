@@ -99,6 +99,7 @@ abstract class RequestBuilder(
                         serverResponse = bodyString,
                         response = response,
                         requestHeaders = mainHeaders,
+                        body = body,
                         time = time,
                         size = "$size bytes"
                     )
@@ -122,7 +123,7 @@ abstract class RequestBuilder(
     interface OnRequestListener {
         fun onParseResponse(
             serverResponse: String, response: Response,
-            requestHeaders: Headers?, time: String, size: String
+            requestHeaders: Headers?, body: RequestBody?, time: String, size: String
         )
 
         fun onErrorResponse(error: String)
