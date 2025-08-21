@@ -13,8 +13,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
+import okhttp3.ResponseBody
 import java.net.Proxy
 import java.util.concurrent.TimeUnit
+
 
 abstract class RequestBuilder(
     context: Context,
@@ -83,10 +85,23 @@ abstract class RequestBuilder(
                     .url(url)
                     .build()
 
+                val startTime = System.nanoTime()
                 val response = client.newCall(request).execute()
-                val body = response.body.string()
+                val endTime = System.nanoTime()
+                val time = formatDuration((endTime - startTime) / 1_000_000)
+                val responseBody = response.body
+                val bytes = responseBody.bytes()
+                val bodyString = String(bytes)
+                val size = bytes.size
+
                 withContext(Dispatchers.Main) {
-                    callback.onParseResponse(body, response)
+                    callback.onParseResponse(
+                        serverResponse = bodyString,
+                        response = response,
+                        requestHeaders = mainHeaders,
+                        time = time,
+                        size = "$size bytes"
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -96,8 +111,20 @@ abstract class RequestBuilder(
         }
     }
 
+    private fun formatDuration(ms: Long): String {
+        return when {
+            ms < 1000 -> "$ms ms"
+            ms < 60_000 -> "${ms / 1000.0} s"
+            else -> "${ms / 60_000.0} m"
+        }
+    }
+
     interface OnRequestListener {
-        fun onParseResponse(serverResponse: String, response: Response)
+        fun onParseResponse(
+            serverResponse: String, response: Response,
+            requestHeaders: Headers?, time: String, size: String
+        )
+
         fun onErrorResponse(error: String)
     }
 }
