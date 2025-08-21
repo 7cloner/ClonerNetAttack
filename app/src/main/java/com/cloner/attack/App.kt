@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.cloner.http.attack.HttpRequestExecutor
 import com.cloner.http.attack.core.RequestBuilder
 import okhttp3.Headers
+import okhttp3.RequestBody
 import okhttp3.Response
 
 class App : AppCompatActivity() {
@@ -22,6 +23,7 @@ class App : AppCompatActivity() {
                         serverResponse: String,
                         response: Response,
                         requestHeaders: Headers?,
+                        body: RequestBody?,
                         time: String,
                         size: String
                     ) {
