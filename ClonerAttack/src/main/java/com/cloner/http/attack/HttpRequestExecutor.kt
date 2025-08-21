@@ -42,40 +42,58 @@ class HttpRequestExecutor(
         private const val CONNECT = "CONNECT"
     }
 
-    fun get(url: String, body: RequestBody?, headers: Headers?, callback: OnRequestListener) {
-        makeRequest(GET, headers, body, url, callback)
+    fun get(url: String, body: RequestBody?, headers: Headers?,
+            transferData: HashMap<String, Map<String, List<String>>> = HashMap(),
+            callback: OnRequestListener) {
+        makeRequest(GET, headers, body, url, transferData, callback)
     }
 
-    fun post(url: String, body: RequestBody?, headers: Headers?, callback: OnRequestListener) {
-        makeRequest(POST, headers, body, url, callback)
+    fun post(url: String, body: RequestBody?, headers: Headers?,
+             transferData: HashMap<String, Map<String, List<String>>> = HashMap(),
+             callback: OnRequestListener) {
+        makeRequest(POST, headers, body, url, transferData, callback)
     }
 
-    fun put(url: String, body: RequestBody?, headers: Headers?, callback: OnRequestListener) {
-        makeRequest(PUT, headers, body, url, callback)
+    fun put(url: String, body: RequestBody?, headers: Headers?,
+            transferData: HashMap<String, Map<String, List<String>>> = HashMap(),
+            callback: OnRequestListener) {
+        makeRequest(PUT, headers, body, url, transferData, callback)
     }
 
-    fun patch(url: String, body: RequestBody?, headers: Headers?, callback: OnRequestListener) {
-        makeRequest(PATCH, headers, body, url, callback)
+    fun patch(url: String, body: RequestBody?, headers: Headers?,
+              transferData: HashMap<String, Map<String, List<String>>> = HashMap(),
+              callback: OnRequestListener) {
+        makeRequest(PATCH, headers, body, url, transferData, callback)
     }
 
-    fun delete(url: String, body: RequestBody?, headers: Headers?, callback: OnRequestListener) {
-        makeRequest(DELETE, headers, body, url, callback)
+    fun delete(url: String, body: RequestBody?, headers: Headers?,
+               transferData: HashMap<String, Map<String, List<String>>> = HashMap(),
+               callback: OnRequestListener) {
+        makeRequest(DELETE, headers, body, url, transferData, callback)
     }
 
-    fun head(url: String, body: RequestBody?, headers: Headers?, callback: OnRequestListener) {
-        makeRequest(HEAD, headers, body, url, callback)
+    fun head(url: String, body: RequestBody?, headers: Headers?,
+             transferData: HashMap<String, Map<String, List<String>>> = HashMap(),
+             callback: OnRequestListener) {
+        makeRequest(HEAD, headers, body, url, transferData, callback)
     }
 
-    fun options(url: String, body: RequestBody?, headers: Headers?, callback: OnRequestListener) {
-        makeRequest(OPTIONS, headers, body, url, callback)
+    fun options(url: String, body: RequestBody?, headers: Headers?,
+                transferData: HashMap<String, Map<String, List<String>>> = HashMap(),
+                callback: OnRequestListener) {
+        makeRequest(OPTIONS, headers, body, url, transferData, callback)
     }
 
-    fun trace(url: String, body: RequestBody?, headers: Headers?, callback: OnRequestListener) {
-        makeRequest(TRACE, headers, body, url, callback)
+    fun trace(url: String, body: RequestBody?, headers: Headers?,
+              transferData: HashMap<String, Map<String, List<String>>> = HashMap(),
+              callback: OnRequestListener) {
+        makeRequest(TRACE, headers, body, url, transferData, callback)
     }
 
-    fun connect(url: String, body: RequestBody?, headers: Headers?, callback: OnRequestListener) {
-        makeRequest(CONNECT, headers, body, url, callback)
+    fun connect(url: String, body: RequestBody?, headers: Headers?,
+                transferData: HashMap<String, Map<String, List<String>>> = HashMap(),
+                callback: OnRequestListener) {
+        makeRequest(CONNECT, headers, body, url, transferData, callback)
     }
 
 }

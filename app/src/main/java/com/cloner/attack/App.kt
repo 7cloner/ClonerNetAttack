@@ -17,15 +17,18 @@ class App : AppCompatActivity() {
         HttpRequestExecutor(
             this, ignoreSSL = false
         )
-            .get("http://192.168.25.36:8000/api/test/b",
-            null, null, object: RequestBuilder.OnRequestListener {
+            .get(
+                "http://192.168.25.36:8000/api/test/b",
+                null, null, HashMap(),
+                object : RequestBuilder.OnRequestListener {
                     override fun onParseResponse(
                         serverResponse: String,
                         response: Response,
                         requestHeaders: Headers?,
                         body: RequestBody?,
                         time: String,
-                        size: String
+                        size: String,
+                        transferData: HashMap<String, Map<String, List<String>>>
                     ) {
                         val headers = response.code
                         val dsv = ""

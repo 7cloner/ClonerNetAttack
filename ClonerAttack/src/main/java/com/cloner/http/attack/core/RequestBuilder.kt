@@ -71,6 +71,7 @@ abstract class RequestBuilder(
         headers: Headers?,
         body: RequestBody?,
         url: String,
+        transferData: HashMap<String, Map<String, List<String>>> = HashMap(),
         callback: OnRequestListener
     ) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -101,7 +102,8 @@ abstract class RequestBuilder(
                         requestHeaders = mainHeaders,
                         body = body,
                         time = time,
-                        size = "$size bytes"
+                        size = "$size bytes",
+                        transferData = transferData
                     )
                 }
             } catch (e: Exception) {
@@ -123,7 +125,8 @@ abstract class RequestBuilder(
     interface OnRequestListener {
         fun onParseResponse(
             serverResponse: String, response: Response,
-            requestHeaders: Headers?, body: RequestBody?, time: String, size: String
+            requestHeaders: Headers?, body: RequestBody?,
+            time: String, size: String, transferData: HashMap<String, Map<String, List<String>>>
         )
 
         fun onErrorResponse(error: String)
