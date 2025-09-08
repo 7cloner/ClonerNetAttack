@@ -14,6 +14,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
+import okio.IOException
 import java.net.Proxy
 import java.util.concurrent.TimeUnit
 
@@ -75,6 +76,7 @@ abstract class RequestBuilder(
         callback: OnRequestListener
     ) {
         CoroutineScope(Dispatchers.IO).launch {
+            val startTime = System.nanoTime()
             try {
                 val mainHeaders = (headers?.newBuilder() ?: Headers.Builder())
                     .set("Connection", if (useKeepAlive) "keep-alive" else "close")
@@ -86,7 +88,6 @@ abstract class RequestBuilder(
                     .url(url)
                     .build()
 
-                val startTime = System.nanoTime()
                 val response = client.newCall(request).execute()
                 val endTime = System.nanoTime()
                 val time = formatDuration((endTime - startTime) / 1_000_000)
@@ -106,9 +107,19 @@ abstract class RequestBuilder(
                         transferData = transferData
                     )
                 }
-            } catch (e: Exception) {
+            } catch (e: IOException) {
+                val endTime = System.nanoTime()
+                val time = formatDuration((endTime - startTime) / 1_000_000)
                 withContext(Dispatchers.Main) {
-                    callback.onErrorResponse(e.message.toString())
+                    callback.onErrorResponse(
+                        error = e.message.toString(),
+                        exception = e,
+                        requestHeaders = headers,
+                        body = body,
+                        time = time,
+                        size = "N/A",
+                        transferData = transferData
+                    )
                 }
             }
         }
@@ -129,6 +140,11 @@ abstract class RequestBuilder(
             time: String, size: String, transferData: List<TransferData>
         )
 
-        fun onErrorResponse(error: String)
+        fun onErrorResponse(
+            error: String,
+            exception: IOException,
+            requestHeaders: Headers?, body: RequestBody?,
+            time: String, size: String, transferData: List<TransferData>
+        )
     }
 }

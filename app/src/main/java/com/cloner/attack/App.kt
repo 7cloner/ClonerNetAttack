@@ -8,6 +8,7 @@ import com.cloner.http.attack.models.TransferData
 import okhttp3.Headers
 import okhttp3.RequestBody
 import okhttp3.Response
+import okio.IOException
 
 class App : AppCompatActivity() {
 
@@ -36,10 +37,17 @@ class App : AppCompatActivity() {
                     }
 
 
-                    override fun onErrorResponse(error: String) {
-                        val dv = ""
+                    override fun onErrorResponse(
+                        error: String,
+                        exception: IOException,
+                        requestHeaders: Headers?,
+                        body: RequestBody?,
+                        time: String,
+                        size: String,
+                        transferData: List<TransferData>
+                    ) {
+                        val error2 =  ""
                     }
-
                 })
     }
 
