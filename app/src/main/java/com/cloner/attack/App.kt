@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.cloner.http.attack.HttpRequestExecutor
 import com.cloner.http.attack.core.RequestBuilder
+import com.cloner.http.attack.models.TransferData
 import okhttp3.Headers
 import okhttp3.RequestBody
 import okhttp3.Response
@@ -19,7 +20,7 @@ class App : AppCompatActivity() {
         )
             .get(
                 "http://192.168.25.36:8000/api/test/b",
-                null, null, HashMap(),
+                null, null, emptyList(),
                 object : RequestBuilder.OnRequestListener {
                     override fun onParseResponse(
                         serverResponse: String,
@@ -28,7 +29,7 @@ class App : AppCompatActivity() {
                         body: RequestBody?,
                         time: String,
                         size: String,
-                        transferData: HashMap<String, Map<String, List<String>>>
+                        transferData: List<TransferData>
                     ) {
                         val headers = response.code
                         val dsv = ""

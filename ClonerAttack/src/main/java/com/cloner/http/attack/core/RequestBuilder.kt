@@ -1,6 +1,7 @@
 package com.cloner.http.attack.core
 
 import android.content.Context
+import com.cloner.http.attack.models.TransferData
 import com.cloner.http.attack.sessions.AttackCookieJar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +14,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
-import okhttp3.ResponseBody
 import java.net.Proxy
 import java.util.concurrent.TimeUnit
 
@@ -66,12 +66,12 @@ abstract class RequestBuilder(
     }
 
 
-    internal fun makeRequest(
+    fun makeRequest(
         method: String,
         headers: Headers?,
         body: RequestBody?,
         url: String,
-        transferData: HashMap<String, Map<String, List<String>>> = HashMap(),
+        transferData: List<TransferData> = ArrayList(),
         callback: OnRequestListener
     ) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -126,7 +126,7 @@ abstract class RequestBuilder(
         fun onParseResponse(
             serverResponse: String, response: Response,
             requestHeaders: Headers?, body: RequestBody?,
-            time: String, size: String, transferData: HashMap<String, Map<String, List<String>>>
+            time: String, size: String, transferData: List<TransferData>
         )
 
         fun onErrorResponse(error: String)
