@@ -46,7 +46,9 @@ class App : AppCompatActivity() {
                         time: Int,
                         timeLabel: String,
                         size: String,
-                        transferData: List<TransferData>
+                        transferData: List<TransferData>,
+                        url: String,
+                        method: String
                     ) {
                         val error2 =  ""
                     }

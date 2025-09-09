@@ -122,7 +122,9 @@ abstract class RequestBuilder(
                         time = timeValue.toInt(),
                         timeLabel = time,
                         size = "N/A",
-                        transferData = transferData
+                        transferData = transferData,
+                        url = url,
+                        method = method
                     )
                 }
             }
@@ -148,7 +150,8 @@ abstract class RequestBuilder(
             error: String,
             exception: IOException,
             requestHeaders: Headers?, body: RequestBody?,
-            time: Int, timeLabel: String, size: String, transferData: List<TransferData>
+            time: Int, timeLabel: String, size: String, transferData: List<TransferData>,
+            url: String, method: String
         )
     }
 }
