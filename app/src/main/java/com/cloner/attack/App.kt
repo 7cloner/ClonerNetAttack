@@ -28,7 +28,8 @@ class App : AppCompatActivity() {
                         response: Response,
                         requestHeaders: Headers?,
                         body: RequestBody?,
-                        time: String,
+                        time: Int,
+                        timeLabel: String,
                         size: String,
                         transferData: List<TransferData>
                     ) {
@@ -42,7 +43,8 @@ class App : AppCompatActivity() {
                         exception: IOException,
                         requestHeaders: Headers?,
                         body: RequestBody?,
-                        time: String,
+                        time: Int,
+                        timeLabel: String,
                         size: String,
                         transferData: List<TransferData>
                     ) {
