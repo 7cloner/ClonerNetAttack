@@ -90,7 +90,8 @@ abstract class RequestBuilder(
 
                 val response = client.newCall(request).execute()
                 val endTime = System.nanoTime()
-                val time = formatDuration((endTime - startTime) / 1_000_000)
+                val timeValue = (endTime - startTime) / 1_000_000
+                val time = formatDuration(timeValue)
                 val responseBody = response.body
                 val bytes = responseBody.bytes()
                 val bodyString = String(bytes)
@@ -102,21 +103,24 @@ abstract class RequestBuilder(
                         response = response,
                         requestHeaders = mainHeaders,
                         body = body,
-                        time = time,
+                        time = timeValue.toInt(),
+                        timeLabel = time,
                         size = "$size bytes",
                         transferData = transferData
                     )
                 }
             } catch (e: IOException) {
                 val endTime = System.nanoTime()
-                val time = formatDuration((endTime - startTime) / 1_000_000)
+                val timeValue = (endTime - startTime) / 1_000_000
+                val time = formatDuration(timeValue)
                 withContext(Dispatchers.Main) {
                     callback.onErrorResponse(
                         error = e.message.toString(),
                         exception = e,
                         requestHeaders = headers,
                         body = body,
-                        time = time,
+                        time = timeValue.toInt(),
+                        timeLabel = time,
                         size = "N/A",
                         transferData = transferData
                     )
@@ -137,14 +141,14 @@ abstract class RequestBuilder(
         fun onParseResponse(
             serverResponse: String, response: Response,
             requestHeaders: Headers?, body: RequestBody?,
-            time: String, size: String, transferData: List<TransferData>
+            time: Int, timeLabel: String, size: String, transferData: List<TransferData>
         )
 
         fun onErrorResponse(
             error: String,
             exception: IOException,
             requestHeaders: Headers?, body: RequestBody?,
-            time: String, size: String, transferData: List<TransferData>
+            time: Int, timeLabel: String, size: String, transferData: List<TransferData>
         )
     }
 }
