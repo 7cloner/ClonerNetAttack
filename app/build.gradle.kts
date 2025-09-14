@@ -11,8 +11,8 @@ android {
         applicationId = "com.cloner.attack"
         minSdk = 22
         targetSdk = 36
-        versionCode = 6
-        versionName = "1.0.6"
+        versionCode = 61
+        versionName = "1.0.61"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
