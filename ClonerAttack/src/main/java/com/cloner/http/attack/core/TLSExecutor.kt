@@ -16,9 +16,9 @@ abstract class TLSExecutor(internal val useKeepAlive: Boolean) {
 
     internal fun getConnectionPool(): ConnectionPool {
         return if (useKeepAlive)
-            ConnectionPool(10, 2, TimeUnit.DAYS)
+            ConnectionPool(200, 45, TimeUnit.SECONDS)
         else
-            ConnectionPool(0, 1, TimeUnit.MILLISECONDS)
+            ConnectionPool(50, 45, TimeUnit.SECONDS)
     }
 
     internal fun enableDispatcher(builder: OkHttpClient.Builder): OkHttpClient.Builder{

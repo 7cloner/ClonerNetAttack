@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.okhttp)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.okhttp.dnsoverhttps)
 }
 
 publishing {

@@ -7,13 +7,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Authenticator
 import okhttp3.Credentials
 import okhttp3.Headers
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
+import okhttp3.dnsoverhttps.DnsOverHttps
 import okio.IOException
 import java.net.Proxy
 import java.util.concurrent.TimeUnit
@@ -32,39 +33,35 @@ abstract class RequestBuilder(
     proxyPassword: String? = null,
 ) : TLSExecutor(useKeepAlive) {
 
-    private val client: OkHttpClient
-
-    init {
-        var builder =
-            enableDispatcher(OkHttpClient.Builder())
-                .connectionPool(getConnectionPool())
-                .connectTimeout(connectionTimeOut, TimeUnit.SECONDS)
-                .readTimeout(readTimeOut, TimeUnit.SECONDS)
-                .writeTimeout(writeTimeOut, TimeUnit.SECONDS)
-
-        if (useCookieJar) {
-            builder = builder.cookieJar(AttackCookieJar(context))
-        }
-
-        if (ignoreSSL) {
-            builder = enableUnsafeSSL(builder)
-        }
-
-        if (proxy != null) {
-            builder = builder.proxy(proxy)
-            if (proxyUsername != null && proxyPassword != null) {
-                val proxyAuthenticator = Authenticator { _, response ->
-                    val credential = Credentials.basic(proxyUsername, proxyPassword)
-                    response.request.newBuilder()
-                        .header("Proxy-Authorization", credential)
-                        .build()
+    private val client: OkHttpClient = enableDispatcher(OkHttpClient.Builder())
+        .connectionPool(getConnectionPool())
+        .connectTimeout(connectionTimeOut, TimeUnit.SECONDS)
+        .readTimeout(readTimeOut, TimeUnit.SECONDS)
+        .writeTimeout(writeTimeOut, TimeUnit.SECONDS)
+        .callTimeout(120, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(true)
+        .followSslRedirects(true)
+        .followRedirects(true)
+        .dns(
+            DnsOverHttps.Builder()
+                .client(OkHttpClient.Builder().build())
+                .url("https://cloudflare-dns.com/dns-query".toHttpUrl())
+                .build()
+        ).apply {
+            if (useCookieJar) cookieJar(AttackCookieJar(context))
+            if (ignoreSSL) enableUnsafeSSL(this)
+            proxy?.let {
+                proxy(it)
+                if (proxyUsername != null && proxyPassword != null) {
+                    proxyAuthenticator { _, response ->
+                        val credential = Credentials.basic(proxyUsername, proxyPassword)
+                        response.request.newBuilder()
+                            .header("Proxy-Authorization", credential)
+                            .build()
+                    }
                 }
-                builder = builder.proxyAuthenticator(proxyAuthenticator)
             }
-        }
-
-        client = builder.build()
-    }
+        }.build()
 
 
     fun makeRequest(
@@ -81,7 +78,6 @@ abstract class RequestBuilder(
                 val mainHeaders = (headers?.newBuilder() ?: Headers.Builder())
                     .set("Connection", if (useKeepAlive) "keep-alive" else "close")
                     .build()
-
                 val request = Request.Builder()
                     .method(method, body)
                     .headers(mainHeaders)
