@@ -20,7 +20,7 @@ class App : AppCompatActivity() {
             this, ignoreSSL = false
         )
             .get(
-                "http://192.168.25.36:8000/api/test/b",
+                "https://google.com",
                 null, null, emptyList(),
                 object : RequestBuilder.OnRequestListener {
                     override fun onParseResponse(

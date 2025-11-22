@@ -16,6 +16,7 @@ import okhttp3.RequestBody
 import okhttp3.Response
 import okhttp3.dnsoverhttps.DnsOverHttps
 import okio.IOException
+import java.net.InetAddress
 import java.net.Proxy
 import java.util.concurrent.TimeUnit
 
@@ -45,7 +46,11 @@ abstract class RequestBuilder(
         .dns(
             DnsOverHttps.Builder()
                 .client(OkHttpClient.Builder().build())
-                .url("https://cloudflare-dns.com/dns-query".toHttpUrl())
+                .url("https://1.1.1.1/dns-query".toHttpUrl())
+                .bootstrapDnsHosts(
+                    InetAddress.getByName("1.1.1.1"),
+                    InetAddress.getByName("1.0.0.1")
+                )
                 .build()
         ).apply {
             if (useCookieJar) cookieJar(AttackCookieJar(context))
